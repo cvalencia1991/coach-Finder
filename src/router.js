@@ -10,12 +10,13 @@ import NotFound from "./pages/NotFound.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", component: '/coaches' },
+    { path: "/", redirect: '/coaches' },
     { path : '/coaches', component: CoachesList },
-    { path: "/coaches/:id", 
+    { 
+      path: "/coaches/:id", 
       component: CoachDetail, 
-      childern:[
-        { path: "contact", component: ContactCoach},
+      children:[
+        { path: "contact", component: ContactCoach },
       ] 
     },
     { path: "/register", component: CoachRegistration },
