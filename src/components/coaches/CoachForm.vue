@@ -56,8 +56,8 @@
         <input 
                type="checkbox" 
                id="backend" 
-               v-model="areas" 
-               value="backend.val">
+               v-model="areas.val" 
+               value="backend">
         <label for="backend"> Backend Development </label>
       </div>
       <div>
