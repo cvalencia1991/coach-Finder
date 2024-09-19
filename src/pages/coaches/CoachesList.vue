@@ -1,6 +1,6 @@
 <template>
   <section>
-    FILTER
+    <coach-filter @change-filter="setFilters"></coach-filter>
   </section>
   <section>
     <base-card>
@@ -26,17 +26,48 @@
 
 <script>
 import CoachItem from '../../components/coaches/CoachItem.vue';
+import CoachFilter from '../../components/coaches/CoachFilter.vue';
 
 export default {
   components: {
-    CoachItem
+    CoachItem,
+    CoachFilter
+  },
+  data() {
+    return {
+      Activefilters: {
+        frontend: true,
+        backend: true,
+        carrer: true
+      }
+    }
   },
   computed: {
     filteredCoaches() {
-      return this.$store.getters['coaches/coaches'];
+      const coaches = this.$store.getters['coaches/coaches'];
+      return coaches.filter(coach => {
+        if(this.Activefilters.frontend && 
+          coach.areas.includes('frontend')){
+          return true;
+        }
+        if(this.Activefilters.backend && 
+          coach.areas.includes('backend')){
+          return true;
+        }
+        if(this.Activefilters.carrer && 
+          coach.areas.includes('carrer')){
+          return true;
+        }
+        return false;
+      });
     },
     hasCoaches() {
       return this.$store.getters['coaches/hasCoaches'];
+    }
+  },
+  methods: {
+    setFilters(updatedFilters){
+      this.Activefilters = updatedFilters;
     }
   }
 }
