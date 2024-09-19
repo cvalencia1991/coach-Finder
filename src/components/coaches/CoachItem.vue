@@ -13,6 +13,7 @@
     </div>
     <div class="actions">
       <base-button 
+         link
          mode="outline" 
          :to="coachContactLink">
         Contact
