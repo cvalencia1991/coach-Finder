@@ -1,57 +1,78 @@
 <template>
   <form  @submit.prevent="submitForm">
-    <div class="form-control">
-      <label> Firstname </label>
-      <input type="text" id="firstname" v-model="firstName" required >
+    <div class="form-control" :class="{invalid: !firstName.isValid}">
+      <label> First name </label>
+      <input 
+         type="text" 
+         id="firstname" 
+         v-model.trim="firstName.val" 
+         @blur="clearValidity('firstName')">
+      <p v-if="!firstName.isValid">First name must not be empty.</p>
     </div>
-      <div class="form-control">
-        <label> lastname </label>
-        <input type="text" id="lastname" v-model="lastName" required >
+    <div class="form-control" :class="{invalid: !lastName.isValid}">
+      <label> Last name </label>
+      <input 
+         type="text" 
+         id="lastname" 
+         v-model.trim="lastName.val"
+         @blur="clearValidity('lastName')"
+         >
+         <p v-if="!lastName.isValid">Last name must not be empty.</p>
+    </div>
+    <div class="form-control" :class="{invalid: !description.isValid}">
+      <label> Description </label>
+      <textarea type="text" 
+                id="description" 
+                v-model.trim="description.val"
+                @blur="clearValidity('description')"
+                >
+      </textarea>
+        <p v-if="!description.isValid">Description must not be empty.</p>
+    </div>
+    <div class="form-control" 
+         :class="{invalid: !rate.isValid}">
+      <label for="rate"> Hourly Rate </label>
+      <input type="number" 
+             id="rate"
+             v-model.number="rate.val"
+             @blur="clearValidity('rate')"
+             >
+      <p v-if="!rate.isValid">Rate must be greater than 0.</p>
+    </div>
+    <div class="form-control"
+         :class="{invalid: !areas.isValid}"
+         @blur="clearValidity('areas')"
+         >
+      <h3>Areas of Expertise</h3>
+      <div>
+        <input 
+         type="checkbox" 
+         id="frontend" 
+         v-model="areas.val"  
+         value="frontend">
+        <label for="frontend"> Frontend Development </label>
       </div>
-        <div class="form-control">
-          <label> Description </label>
-          <textarea type="text" 
-                    id="description" 
-                    v-model="description">
-          </textarea>
-        </div>
-        <div class="form-control">
-          <label for="rate"> Hourly Rate </label>
-          <input type="number" 
-                 id="rate" 
-                 v-model.number="rate" 
-                  required >
-        </div>
-          <div class="form-control">
-            <h3>Areas of Expertise</h3>
-            <div>
-              <input 
-              type="checkbox" 
-              id="frontend" 
-              v-model="areas"  
-              value="frontend" 
-              checked>
-              <label for="frontend"> Frontend Development </label>
-            </div>
-            <div>
-              <input 
-              type="checkbox" 
-              id="backend" 
-              v-model="areas" 
-              value="backend" 
-              checked>
-              <label for="backend"> Backend Development </label>
-            </div>
-            <div>
-              <input 
-              type="checkbox" 
-              id="carrer" 
-              v-model="areas" 
-              value="carrer" checked>
-              <label for="carrer"> Carrer Advisory </label>
-            </div>
-          </div>
-          <base-button>Register</base-button>
+      <div>
+        <input 
+               type="checkbox" 
+               id="backend" 
+               v-model="areas" 
+               value="backend.val">
+        <label for="backend"> Backend Development </label>
+      </div>
+      <div>
+        <input 
+               type="checkbox" 
+               id="carrer" 
+               v-model="areas.val" 
+               value="carrer" >
+               <label for="carrer"> Carrer Advisory </label>
+      </div>
+      <p v-if="!areas.isValid">At least one expertise must be selected.</p>
+    </div>
+    <p v-if="!formIsValid">Please Fix the above 
+    errors and submit again.</p>
+    <base-button>Register</base-button>
   </form>
 </template>
 
@@ -60,21 +81,69 @@ export default {
   emits: ['save-data'],
   data(){
     return {
-      firstName: '',
-      lastName: '',
-      description: '',
-      rate: 0,
-      areas: []
+      firstName: {
+        val: '',
+        isValid: true
+      },
+      lastName: {
+        val: '',
+        isValid: true
+      },
+      description: {
+        val: '',
+        isValid: true
+      },
+      rate: {
+        val: null,
+        isValid: true
+      },
+      areas: {
+        val: [],
+        isValid: true
+      },
+      formIsValid: true
     }
   },
   methods: {
+    clearValidity(input){
+      this[input].isValid = true;
+    },
+    valiudateForm(){
+      this.formIsValid = true;
+      if(this.firstName.val === ''){
+        this.firstName.isValid = false;
+        this.formIsValid = false;
+      }
+      if(this.lastName.val === ''){
+        this.lastName.isValid = false;
+        this.formIsValid = false;
+      }
+      if(this.description.val === ''){
+        this.description.isValid = false;
+        this.formIsValid = false;
+      }
+      if(!this.rate.val || this.rate.val <= 0){
+        this.rate.isValid = false;
+        this.formIsValid = false;
+      }
+      if(this.areas.val.length === 0){
+        this.areas.isValid = false;
+        this.formIsValid = false;
+      }
+    },
     submitForm(){
+      this.valiudateForm();
+
+      if(!this.formIsValid){
+        return;
+      }
+
       const coachData = {
-        first: this.firstName,
-        last: this.lastName,
-        desc: this.description,
-        rate: this.rate,
-        areas: this.areas
+        first: this.firstName.val,
+        last: this.lastName.val,
+        desc: this.description.val,
+        rate: this.rate.val,
+        areas: this.areas.val
       }
       this.$emit('save-data', coachData);
     }
