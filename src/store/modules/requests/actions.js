@@ -6,11 +6,11 @@ export default {
       message: payload.message
     };
     const response = await fetch(
-      `https://vue-http-coach-5a941-default-rtdb.firebaseio.com/${payload.coachId}.json`, 
+      `https://vue-http-coach-5a941-default-rtdb.firebaseio.com/requests/${payload.coachId}.json`, 
       {
-    method: 'POST',
-    body: JSON.stringify(newRequest)
-  });
+        method: 'POST',
+        body: JSON.stringify(newRequest)
+      });
 
     const responseData = await response.json();
 
