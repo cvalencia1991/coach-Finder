@@ -43,7 +43,7 @@ export default {
     },
     receivedRequests() {
       return this.$store.getters['requests/requests'];
-    }
+    },
   },
   created() {
     this.fetchRequests();
