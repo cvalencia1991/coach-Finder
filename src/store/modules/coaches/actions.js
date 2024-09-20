@@ -36,7 +36,7 @@ export default {
 
     const response = await fetch(
       `https://vue-http-coach-5a941-default-rtdb.firebaseio.com/coaches.json`
-    )
+   )
 
     const responseData = await response.json();
 
