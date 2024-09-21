@@ -1,7 +1,8 @@
 <template>
+  <div>
   <base-dialog 
     :show="!!error" 
-    title="An error Occur"
+    title="An error Occurr"
     @close="handleError"
     >
     <p>{{ error }}</p>
@@ -22,6 +23,7 @@
       <h3 v-else>You haven't received any requests yet.</h3>
     </base-card>
   </section>
+  </div>
 </template>
 
 <script>
@@ -51,11 +53,13 @@ export default {
   methods: {
     async fetchRequests() {
       this.isLoading = true;
+
       try{
         await this.$store.dispatch('requests/fetchRequests');
       }catch(error){
         this.error = error.message || 'An error occurred.';
       }
+      
       this.isLoading = false;
     },
     handleError() {
